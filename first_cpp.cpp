@@ -4,6 +4,7 @@
 
 using namespace std;
 
+<<<<<<< HEAD
 int main ()
 {
     int x = 1;
@@ -29,5 +30,12 @@ int main ()
     }
     
     //getchar ();
+=======
+void main ()
+{
+    //need
+    cout << "hello world!" << endl;
+    getchar ();
+>>>>>>> 7f2141b1211cc3349edb05e2f43df7168865dd74
     return 0;
 }

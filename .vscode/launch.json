@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "version": "0.2.0",
     "configurations": [
         {
@@ -25,3 +26,29 @@
     ],
     "compounds": []
 }
+=======
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "(gdb) Launch",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/bin/test.exe",
+                "args": [],
+                "stopAtEntry": false,
+                "cwd": "${workspaceRoot}",
+                "environment": [],
+                "externalConsole": true,
+                "MIMode": "gdb",
+                "miDebuggerPath": "/path/to/gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ]
+            }
+        ]
+    }
+>>>>>>> 7f2141b1211cc3349edb05e2f43df7168865dd74
