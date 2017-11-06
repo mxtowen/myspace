@@ -27,7 +27,5 @@ int main ()
         }
         cin >> x;
     }
-    
-    //getchar ();
     return 0;
 }
