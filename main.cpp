@@ -29,7 +29,7 @@ void State1::Handle(Context* pContext, TestEvent event)
     switch(event)
     {
         case TESTEVENT1:
-          pContext->ChangeState(new State2);
+          pContext->ChangeState(eState2);
             break;
         default:
             break;
@@ -41,7 +41,7 @@ void State2::Handle(Context* pContext, TestEvent event)
     switch(event)
     {
         case TESTEVENT2:
-            pContext->ChangeState(new State3);
+            pContext->ChangeState(eState3);
             break;
         default:
             break;
@@ -53,38 +53,66 @@ void State3::Handle(Context* pContext, TestEvent event)
     switch(event)
     {
         case TESTEVENT3:
-            pContext->ChangeState(new State1);
+            pContext->ChangeState(eState1);
             break;
         default:
             break;
     }
 }
 
-Context::Context(State* pState) : d_state(pState)
+Context::Context()
 {
-
+    Init();
+    // init state
+    d_state = state_list_[eState1];
 }
 
 Context::~Context()
 {
-    delete d_state;
+    //delete d_state;
+    Release();
+}
+
+void Context::Init(void)
+{
+    for (int i = 1; i < eState_Max; ++i)
+    {
+        StateFactory((StateType)i);
+    }
+}
+
+void Context::Release(void)
+{
+    for (auto& i : state_list_)
+    {
+        delete i.second;
+        i.second = NULL;
+    }
+    state_list_.clear();
+
     d_state = NULL;
 }
+
 
 void Context::Request(TestEvent event)
 {
     d_state->Handle(this, event);
 }
 
-void Context::ChangeState(State *pState)
+void Context::ChangeState(StateType state)
 {
-    if (d_state != NULL)
-    {
-        delete d_state;
-        d_state = NULL;
+    auto it = state_list_.find(state);
+    if (it != state_list_.end())
+    {// find it
+        d_state = it->second;
     }
+    // if (d_state != NULL)
+    // {
+    //     delete d_state;
+    //     d_state = NULL;
+    // }
 
-    d_state = pState;
+    // d_state = pState;
 }
 
 string Context::getStateStr()   
@@ -92,28 +120,50 @@ string Context::getStateStr()
     return d_state->getStateStr();
 }
 
+void Context::StateFactory(StateType state)
+{
+    switch (state)
+    {
+    case eState1:
+        state_list_[state] = new State1;
+        break;
+    case eState2:
+        state_list_[state] = new State2;
+        break;
+    case eState3:
+        state_list_[state] = new State3;
+        break;
+    default:
+        break;
+    }
+}
+
+
 int main(int argc, char *argv[])
 {
-    int i = 0;
+    char i = 0;
     string lastStateStr;
 
     //事件
     enum TestEvent event = UNKOWNTESTEVENT;  
 
     //初始状态
-    Context context(new State1);
+    Context context;
+
+    //context.Request(TESTEVENT1);
 
     while(1)
     {  
-        switch(i%3)
+        cout << "input event (0-2):" << endl;
+        cin >> i;
+        switch(i)
         {  
-            case 0: event = TESTEVENT1; break;  
-            case 1: event = TESTEVENT2; break;  
-            case 2: event = TESTEVENT3; break;  
-            default: break;  
+            case '0': event = TESTEVENT1; break;
+            case '1': event = TESTEVENT2; break;
+            case '2': event = TESTEVENT3; break;
+            case 'x': goto EXIT;
+            default: break;
         }
-
-        i++;  
 
         lastStateStr = context.getStateStr();
 
@@ -121,8 +171,10 @@ int main(int argc, char *argv[])
 
         printf("[%s]-[%s]->[%s]\n", lastStateStr.c_str(), TestEventStr[event], context.getStateStr().c_str());
 
-        sleep(1);
+        //sleep(1);
     }
+
+EXIT:
 
     return 0;
 }

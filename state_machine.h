@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -14,19 +15,17 @@ enum TestEvent
     TESTEVENT3          =   3,
 };
 
-class State;
-
-class Context
+enum StateType
 {
-    public:
-        Context(State* pState);
-        ~Context();
-        void Request(TestEvent event);
-        void ChangeState(State *pState);
-        string getStateStr(void);   
-    private:
-        State *d_state;
+    enull = 0,
+    eState1 = 1,
+    eState2 = 2,
+    eState3 = 3,
+    eState4 = 4,
+    eState_Max,
 };
+
+class Context;
 
 class State
 {
@@ -44,6 +43,22 @@ class State
         string getStateStr();
 
         string d_stateStr;
+};
+
+class Context
+{
+    public:
+        Context();
+        ~Context();
+        void Request(const TestEvent event);
+        void ChangeState(const StateType state);
+        string getStateStr(void);
+    private:
+        void StateFactory(const StateType state);
+        void Init(void);
+        void Release(void);
+        map<StateType, State*> state_list_;
+        State* d_state;
 };
 
 class  State1 : public State
