@@ -94,7 +94,7 @@ string Context::getStateStr()
 
 int main(int argc, char *argv[])
 {
-    int i = 0;
+    char i = 0;
     string lastStateStr;
 
     //事件
@@ -105,15 +105,16 @@ int main(int argc, char *argv[])
 
     while(1)
     {  
-        switch(i%3)
+        cout << "input event (0-2):" << endl;
+        cin >> i;
+        switch(i)
         {  
-            case 0: event = TESTEVENT1; break;  
-            case 1: event = TESTEVENT2; break;  
-            case 2: event = TESTEVENT3; break;  
+            case '0': event = TESTEVENT1; break;  
+            case '1': event = TESTEVENT2; break;  
+            case '2': event = TESTEVENT3; break;
+            case 'x': goto EXIT;
             default: break;  
         }
-
-        i++;  
 
         lastStateStr = context.getStateStr();
 
@@ -121,8 +122,10 @@ int main(int argc, char *argv[])
 
         printf("[%s]-[%s]->[%s]\n", lastStateStr.c_str(), TestEventStr[event], context.getStateStr().c_str());
 
-        sleep(1);
+        //sleep(1);
     }
+
+EXIT:
 
     return 0;
 }
