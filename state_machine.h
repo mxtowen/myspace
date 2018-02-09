@@ -18,10 +18,12 @@ enum TestEvent
 enum StateType
 {
     enull = 0,
-    eState1 = 1,
-    eState2 = 2,
-    eState3 = 3,
-    eState4 = 4,
+    eDisconnect         = 1,        // plug out iphone        
+    eStarting           = 2,        // start session
+    eForegroud          = 3,        // phonecall | siri | media in foreground
+    eForegroudTemp      = 4,        // alert | phonecall, controller borrow screen and audio
+    eBackgroudHalf      = 5,        // screen : accessary, audio : controller
+    eBackgroudFull      = 6,        // screen : accessary, audio : acceessary
     eState_Max,
 };
 
@@ -59,38 +61,73 @@ class Context
         void Release(void);
         map<StateType, State*> state_list_;
         State* d_state;
+        StateType current_state_;
+        StateType last_state_;
 };
 
-class  State1 : public State
+class  StateDisconnect : public State
 {
     public:
         void Handle(Context* pContext, TestEvent event);
         // void StateIn();
         // void StateOut();
-        State1() : State("state1")
+        StateDisconnect() : State("StateDisconnect")
         {
         }
 };
 
-class State2: public State
+class StateStarting : public State
 {
     public:
         void Handle(Context* pContext, TestEvent event);
         // void StateIn();
         // void StateOut();
-        State2() : State("state2")
+        StateStarting() : State("StateStarting")
         {
         }
 
 };
 
-class State3: public State
+class StateForegroud : public State
 {
     public:
         void Handle(Context* pContext, TestEvent event);
         // void StateIn();
         // void StateOut();
-        State3() : State("state3")
+        StateForegroud() : State("StateForegroud")
+        {
+        }
+};
+
+class StateForegroudTemp : public State
+{
+    public:
+        void Handle(Context* pContext, TestEvent event);
+        // void StateIn();
+        // void StateOut();
+        StateForegroudTemp() : State("StateForegroudTemp")
+        {
+        }
+};
+
+class StateBackgroudHalf : public State
+{
+    public:
+        void Handle(Context* pContext, TestEvent event);
+        // void StateIn();
+        // void StateOut();
+        StateBackgroudHalf() : State("StateBackgroudHalf")
+        {
+        }
+};
+
+class StateBackgroudFull : public State
+{
+    public:
+        void Handle(Context* pContext, TestEvent event);
+        // void StateIn();
+        // void StateOut();
+        StateBackgroudFull() : State("StateBackgroudFull")
         {
         }
 };

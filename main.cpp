@@ -3,6 +3,11 @@
 #include <string>
 
 #include "state_machine.h"
+//#include "event_queue.h"
+
+#include <mutex>
+
+#include <tuple>
 
 using namespace std;
 
@@ -24,36 +29,72 @@ string State::getStateStr()
     return d_stateStr; 
 }
 
-void State1::Handle(Context* pContext, TestEvent event)
+void StateDisconnect::Handle(Context* pContext, TestEvent event)
 {
     switch(event)
     {
         case TESTEVENT1:
-          pContext->ChangeState(eState2);
+          pContext->ChangeState(eDisconnect);
             break;
         default:
             break;
     } 
 }
 
-void State2::Handle(Context* pContext, TestEvent event)
+void StateStarting::Handle(Context* pContext, TestEvent event)
 {
     switch(event)
     {
         case TESTEVENT2:
-            pContext->ChangeState(eState3);
+            pContext->ChangeState(eDisconnect);
             break;
         default:
             break;
     }
 }
 
-void State3::Handle(Context* pContext, TestEvent event)
+void StateForegroud::Handle(Context* pContext, TestEvent event)
 {
     switch(event)
     {
         case TESTEVENT3:
-            pContext->ChangeState(eState1);
+            pContext->ChangeState(eDisconnect);
+            break;
+        default:
+            break;
+    }
+}
+
+void StateForegroudTemp::Handle(Context* pContext, TestEvent event)
+{
+    switch(event)
+    {
+        case TESTEVENT3:
+            pContext->ChangeState(eDisconnect);
+            break;
+        default:
+            break;
+    }
+}
+
+void StateBackgroudFull::Handle(Context* pContext, TestEvent event)
+{
+    switch(event)
+    {
+        case TESTEVENT3:
+            pContext->ChangeState(eDisconnect);
+            break;
+        default:
+            break;
+    }
+}
+
+void StateBackgroudHalf::Handle(Context* pContext, TestEvent event)
+{
+    switch(event)
+    {
+        case TESTEVENT3:
+            pContext->ChangeState(eDisconnect);
             break;
         default:
             break;
@@ -64,7 +105,7 @@ Context::Context()
 {
     Init();
     // init state
-    d_state = state_list_[eState1];
+    //d_state = state_list_[eDisconnect];
 }
 
 Context::~Context()
@@ -122,25 +163,29 @@ string Context::getStateStr()
 
 void Context::StateFactory(StateType state)
 {
-    switch (state)
-    {
-    case eState1:
-        state_list_[state] = new State1;
-        break;
-    case eState2:
-        state_list_[state] = new State2;
-        break;
-    case eState3:
-        state_list_[state] = new State3;
-        break;
-    default:
-        break;
-    }
+    // switch (state)
+    // {
+    // case eState1:
+    //     state_list_[state] = new State1;
+    //     break;
+    // case eState2:
+    //     state_list_[state] = new State2;
+    //     break;
+    // case eState3:
+    //     state_list_[state] = new State3;
+    //     break;
+    // default:
+    //     break;
+    // }
 }
 
 
 int main(int argc, char *argv[])
 {
+    //SeqQueue<int> queue;
+    std::tuple<int, int> ll;
+    std::mutex mtx;
+
     char i = 0;
     string lastStateStr;
 
